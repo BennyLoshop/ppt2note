@@ -1,4 +1,4 @@
-name: Build Windows EXE (Win7 compatible)
+name: Build Windows EXE (Win7 compatible, Tkinter)
 
 on:
   push:
@@ -22,14 +22,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install nuitka pywin32 pillow requests pycryptodome psutil
 
-    - name: Compile p2n.py (directory mode, MinGW)
+    - name: Compile p2n.py (directory mode, MinGW, Tkinter)
       run: |
         mkdir build
-        python -m nuitka --mingw64 --standalone --windows-disable-console --output-dir=build p2n.py
+        python -m nuitka --mingw64 --standalone --windows-disable-console --enable-plugin=tk-inter --output-dir=build p2n.py
 
-    - name: Compile p2nd.py (single file, MinGW)
+    - name: Compile p2nd.py (single file, MinGW, Tkinter)
       run: |
-        python -m nuitka --mingw64 --onefile --windows-disable-console --output-dir=build p2nd.py
+        python -m nuitka --mingw64 --onefile --windows-disable-console --enable-plugin=tk-inter --output-dir=build p2nd.py
 
     - name: Create ZIP for download
       run: |
