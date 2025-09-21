@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-windows:
-    runs-on: windows-latest  # 官方 runner 只能用 Windows Server，但用 MinGW 可兼容 Win7
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -36,7 +36,7 @@ jobs:
         powershell Compress-Archive -Path build\* -DestinationPath windows-exes.zip
 
     - name: Upload ZIP artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: windows-exes
         path: windows-exes.zip
