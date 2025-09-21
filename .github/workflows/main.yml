@@ -1,0 +1,42 @@
+name: Build Windows EXE (Win7 compatible)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest  # 官方 runner 只能用 Windows Server，但用 MinGW 可兼容 Win7
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install nuitka pywin32 pillow requests pycryptodome psutil
+
+    - name: Compile p2n.py (directory mode, MinGW)
+      run: |
+        mkdir build
+        python -m nuitka --mingw64 --standalone --windows-disable-console --output-dir=build p2n.py
+
+    - name: Compile p2nd.py (single file, MinGW)
+      run: |
+        python -m nuitka --mingw64 --onefile --windows-disable-console --output-dir=build p2nd.py
+
+    - name: Create ZIP for download
+      run: |
+        powershell Compress-Archive -Path build\* -DestinationPath windows-exes.zip
+
+    - name: Upload ZIP artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: windows-exes
+        path: windows-exes.zip
