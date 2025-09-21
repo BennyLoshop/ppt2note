@@ -1,0 +1,6 @@
+requests
+oss2
+Pillow
+pycryptodome
+pywin32
+psutil

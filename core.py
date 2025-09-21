@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 import hashlib
 import datetime
+import os
 import uuid
 import api
 
@@ -258,13 +259,16 @@ def uploadNote(
     new_url = f"http://ezy-sxz.oss-cn-hangzhou.aliyuncs.com/note_v2/res/{user_id}/{today_str}/{custom_fileId}/"
     api.addOrUpdateNote(custom_fileId, name, "0", 12, new_url, token)
 
-def uploadPpt(file,token,userid):
+def uploadPpt(file,user,userid):
+    token=api.login(user[0],user[1])
+    if token=="0":
+        return
     img = api.ppt2webp(file,token,userid)
     print(uploadNote(
         output_file="reconstructed.json",
         user_id=userid,
         token=token,
-        name="1234567890",
+        name=os.path.basename(file),
         imgList=img,
     ))
 

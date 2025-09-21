@@ -15,6 +15,30 @@ from PIL import Image
 from io import BytesIO
 import os
 
+def login(username, pwd):
+    url = "http://sxz.api.zykj.org/api/TokenAuth/Login"
+    headers = {
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+        "Connection": "keep-alive",
+        "Accept-Encoding": "gzip",
+        "Content-Type": "application/json",
+    }
+    data = {"userName": username, "password": pwd, "clientType": 1}
+
+    try:
+        response = requests.post(url, headers=headers, json=data, verify=False)
+        if response.status_code == 200:
+            result = response.json()
+            if result.get("success"):
+                return result["result"]["accessToken"]
+            else:
+                return "0"
+        else:
+            return "0"
+    except Exception as e:
+        return "0"
+
 def ppt2webp(filepath,token,userid):
     url = upload(nonce=generate_custom_fileid(),filename="s.ppt",token=token,user_id=userid,sourcePath=filepath)
     rep = requests.get("https://sfs.zyai.cc:8443/OfficeConvertToPdf/Convert?pptUrl="+url)
